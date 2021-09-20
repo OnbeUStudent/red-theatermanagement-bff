@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dii_TheaterManagement_Bff.Clients;
 using Dii_TheaterManagement_Bff.Features.SyntheticBehavior;
+using System;
 
 namespace Dii_TheaterManagement_Bff.Controllers
 {
@@ -29,8 +30,12 @@ namespace Dii_TheaterManagement_Bff.Controllers
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(long id)
+        public async Task<ActionResult<Movie>> GetMovie(Guid id)
         {
+            //if (!Guid.TryParse(id, out Guid movieIdAsGuid))
+            //{
+            //    return NotFound();
+            //}
             return await _orderingSvcClient.ApiMoviesGetAsync(id);
         }
     }
