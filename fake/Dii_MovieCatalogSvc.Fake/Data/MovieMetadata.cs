@@ -19,7 +19,7 @@ namespace Dii_MovieCatalogSvc.Fake.Data
     public partial class MovieMetadata
     {
         [JsonIgnore]
-        public long MovieMetadataId { get; set; }
+        public string MovieMetadataId { get; set; }
 
         [JsonProperty("Title")]
         [Required]

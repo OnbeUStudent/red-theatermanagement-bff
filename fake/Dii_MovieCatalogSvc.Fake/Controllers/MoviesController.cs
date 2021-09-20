@@ -29,7 +29,7 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(long id)
+        public async Task<ActionResult<Movie>> GetMovie(string id)
         {
             var movie = await _context.Movie
                 .Include(movie => movie.MovieMetadata)
@@ -46,7 +46,7 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> PutMovie(long id, Movie movie)
+        public async Task<IActionResult> PutMovie(string id, Movie movie)
         {
             if (id != movie.MovieId)
             {
@@ -88,7 +88,7 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
         // DELETE: api/Movies/5
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> DeleteMovie(long id)
+        public async Task<IActionResult> DeleteMovie(string id)
         {
             var movie = await _context.Movie.FindAsync(id);
             if (movie == null)
@@ -105,7 +105,7 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
         // PUT: api/MovieMetadatas/5/MovieMetadatas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}/MovieMetadatas")]
-        public async Task<IActionResult> PutMovieMetadata(long id, MovieMetadata movieMetadata)
+        public async Task<IActionResult> PutMovieMetadata(string id, MovieMetadata movieMetadata)
         {
             if (id != movieMetadata.MovieMetadataId)
             {
@@ -133,7 +133,7 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
             return NoContent();
         }
 
-        private bool MovieExists(long id)
+        private bool MovieExists(string id)
         {
             return _context.Movie.Any(e => e.MovieId == id);
         }
