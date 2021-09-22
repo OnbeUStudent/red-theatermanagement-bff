@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System;
 
+
 namespace Dii_OrderingSvc.Fake.Controllers
 {
     [Route("api/movies")]
@@ -34,11 +35,15 @@ namespace Dii_OrderingSvc.Fake.Controllers
 
         // GET: api/Movies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(Guid id)
+        public async Task<ActionResult<Movie>> GetMovie(string id)
         {
+            if (!Guid.TryParse(id, out Guid movieIdAsGuid))
+            {
+                return NotFound();
+            }
             var movie = await _context.Movies
                 .Include(movie => movie.MovieMetadata)
-                .SingleOrDefaultAsync(movie => movie.MovieId == id);
+                .SingleOrDefaultAsync(movie => movie.MovieId == movieIdAsGuid);
             if (movie == null)
             {
                 return NotFound();

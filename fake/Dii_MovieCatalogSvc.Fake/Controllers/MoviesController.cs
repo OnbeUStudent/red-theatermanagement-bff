@@ -4,6 +4,7 @@ using Dii_MovieCatalogSvc.Fake.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 //test
 namespace Dii_MovieCatalogSvc.Fake.Controllers
 {
@@ -31,9 +32,13 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Movie>> GetMovie(string id)
         {
+            if (!Guid.TryParse(id, out Guid movieIdAsGuid))
+            {
+                return NotFound();
+            }
             var movie = await _context.Movie
                 .Include(movie => movie.MovieMetadata)
-                .SingleOrDefaultAsync(movie => movie.MovieId == id);
+                .SingleOrDefaultAsync(movie => movie.MovieId == movieIdAsGuid);
             if (movie == null)
             {
                 return NotFound();
@@ -48,7 +53,11 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
         [ProducesResponseType(204)]
         public async Task<IActionResult> PutMovie(string id, Movie movie)
         {
-            if (id != movie.MovieId)
+            if (!Guid.TryParse(id, out Guid movieIdAsGuid))
+            {
+                return NotFound();
+            }
+            if (movieIdAsGuid != movie.MovieId)
             {
                 return BadRequest();
             }
@@ -61,7 +70,7 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MovieExists(id))
+                if (!MovieExists(movieIdAsGuid))
                 {
                     return NotFound();
                 }
@@ -107,7 +116,11 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
         [HttpPut("{id}/MovieMetadatas")]
         public async Task<IActionResult> PutMovieMetadata(string id, MovieMetadata movieMetadata)
         {
-            if (id != movieMetadata.MovieMetadataId)
+            if (!Guid.TryParse(id, out Guid movieIdAsGuid))
+            {
+                return NotFound();
+            }
+            if (movieIdAsGuid != movieMetadata.MovieMetadataId)
             {
                 return BadRequest();
             }
@@ -120,7 +133,7 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MovieExists(id))
+                if (!MovieExists(movieIdAsGuid))
                 {
                     return NotFound();
                 }
@@ -133,7 +146,7 @@ namespace Dii_MovieCatalogSvc.Fake.Controllers
             return NoContent();
         }
 
-        private bool MovieExists(string id)
+        private bool MovieExists(Guid id)
         {
             return _context.Movie.Any(e => e.MovieId == id);
         }
